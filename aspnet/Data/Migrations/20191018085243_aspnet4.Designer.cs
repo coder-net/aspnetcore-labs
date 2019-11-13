@@ -10,8 +10,8 @@ using aspnet.Data;
 namespace aspnet.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191017210906_aspnet-aspnet-6E5EA18E-AF41-4EB0-AA2C-A96590F508C6")]
-    partial class aspnetaspnet6E5EA18EAF414EB0AA2CA96590F508C6
+    [Migration("20191018085243_aspnet4")]
+    partial class aspnet4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,30 +21,55 @@ namespace aspnet.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("aspnet.Models.CommentModel", b =>
+            modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Post>", b =>
                 {
                     b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("PostModelPostId");
+                    b.Property<DateTime>("CreationTime");
 
-                    b.Property<string>("Text");
+                    b.Property<int?>("ParentPostId");
 
-                    b.Property<DateTime>("Time");
+                    b.Property<string>("Text")
+                        .IsRequired();
 
-                    b.Property<string>("UserId");
+                    b.Property<int>("UserId");
 
                     b.HasKey("CommentId");
 
-                    b.HasIndex("PostModelPostId");
+                    b.HasIndex("ParentPostId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CommentModel");
+                    b.ToTable("Comment<Post>");
                 });
 
-            modelBuilder.Entity("aspnet.Models.PostModel", b =>
+            modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Topic>", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<int?>("ParentTopicId");
+
+                    b.Property<string>("Text")
+                        .IsRequired();
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("ParentTopicId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comment<Topic>");
+                });
+
+            modelBuilder.Entity("aspnet.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
@@ -54,13 +79,69 @@ namespace aspnet.Data.Migrations
 
                     b.Property<DateTime>("Time");
 
-                    b.Property<string>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("PostId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("PostModels");
+                });
+
+            modelBuilder.Entity("aspnet.Models.Topic", b =>
+                {
+                    b.Property<int>("TopicId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<DateTime>("LastChangeTime");
+
+                    b.Property<string>("TopicName");
+
+                    b.HasKey("TopicId");
+
+                    b.ToTable("TopicModels");
+                });
+
+            modelBuilder.Entity("aspnet.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp");
+
+                    b.Property<string>("Email");
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail");
+
+                    b.Property<string>("NormalizedUserName");
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -228,20 +309,33 @@ namespace aspnet.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("aspnet.Models.CommentModel", b =>
+            modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Post>", b =>
                 {
-                    b.HasOne("aspnet.Models.PostModel")
+                    b.HasOne("aspnet.Models.Post", "Parent")
                         .WithMany("Comments")
-                        .HasForeignKey("PostModelPostId");
+                        .HasForeignKey("ParentPostId");
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("aspnet.Models.PostModel", b =>
+            modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Topic>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                    b.HasOne("aspnet.Models.Topic", "Parent")
+                        .WithMany("Messages")
+                        .HasForeignKey("ParentTopicId");
+
+                    b.HasOne("aspnet.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("aspnet.Models.Post", b =>
+                {
+                    b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });

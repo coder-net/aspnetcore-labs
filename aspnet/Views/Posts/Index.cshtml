@@ -1,4 +1,4 @@
-﻿@model  IEnumerable<aspnet.Models.PostModel>
+﻿@model  IEnumerable<aspnet.Models.Post>
 
 @{
     ViewData["Title"] = "Index";
@@ -7,11 +7,25 @@
 <h2>Index</h2>
 
 
-<ul>
+    <ul>
     @foreach (var post in Model)
     {
-        <li>
-            @Html.Raw(post.Text)
-        </li>
+    <li>
+        @Html.Raw(post.Text)
+        <im>@post.Time</im>
+        @*@if (post.Comments != null)
+        {
+        <ul>
+            @foreach (var comment in post.Comments)
+            {
+                <li>
+                    comment
+                </li>
+            }
+        </ul>
+        }*@
+        
+    </li>
     }
 </ul>
+    

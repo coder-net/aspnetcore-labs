@@ -13,11 +13,11 @@ namespace aspnet.Areas.Identity.Pages.Account.Manage
 {
     public class DownloadPersonalDataModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Models.User> _userManager;
         private readonly ILogger<DownloadPersonalDataModel> _logger;
 
         public DownloadPersonalDataModel(
-            UserManager<IdentityUser> userManager,
+            UserManager<Models.User> userManager,
             ILogger<DownloadPersonalDataModel> logger)
         {
             _userManager = userManager;

@@ -1,4 +1,5 @@
 ﻿using aspnet.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,30 +7,64 @@ using System.Threading.Tasks;
 
 namespace aspnet.Data
 {
-    public static class DbInitializer
-    {
-        public static void Initialize(ApplicationDbContext context)
-        {
-            context.Database.EnsureCreated();
 
-            if (context.Posts.Any())
+    public interface IDBInitializer
+    {
+        void Initialize();
+    }
+
+    public class DbInitializer : IDBInitializer
+    {
+        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+        private readonly ApplicationDbContext _context;
+
+        public DbInitializer(Microsoft.AspNetCore.Identity.UserManager<User> userManager
+            , ApplicationDbContext context)
+        {
+            _userManager = userManager;
+            _context = context;
+        }
+        public void Initialize()
+        {
+            _context.Database.EnsureCreated();
+
+            if (_context.PostModels.Any())
             {
                 return;
             }
+            var user1 = new User();
+            user1.Email = "a@gmail.com";
+            _userManager.CreateAsync(user1, "Aa123!");
+            var user2 = new User();
+            user2.Email = "b@gmail.com";
+            _userManager.CreateAsync(user2, "Bb123!");
+            var user3 = new User();
+            user3.Email = "c@gmailc.om";
+            _userManager.CreateAsync(user3, "Cc123!");
 
-            var posts = new PostModel[]
+            var posts = new Post[]
             {
-                new PostModel("<h1>H1</h1>"),
-                new PostModel("<b>Bolt</b>"),
-                new PostModel("<h2>H2</h2>")
+                new Post("<h1>H1</h1>", user1),
+                //new PostModel("<b>Bolt</b>"),
+                //new PostModel("<h2>H2</h2>")
             };
+
+            var comments = new Comment<Post>[]
+            {
+                Comment<Post>.Create("Comment", user1, posts[0]),
+                Comment<Post>.Create("Comment2", user2, posts[0])
+            };
+            posts[0].Comments = comments;
+
 
             foreach (var post in posts)
             {
-                context.Posts.Add(post);
+                _context.PostModels.Add(post);
             }
 
-            context.SaveChanges();
+
+            
+            _context.SaveChanges();
         }
     }
 }

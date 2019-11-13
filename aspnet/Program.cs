@@ -22,17 +22,19 @@ namespace aspnet
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-               // try
+                //try
                 //{
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    DbInitializer.Initialize(context);
-                //}
-                //catch (Exception ex)
-                //{
-                  //  var logger = services.GetRequiredService<ILogger<Program>>();
-                    //logger.LogError(ex, "An error occurred while seeding the database.");
-                  //  throw new Exception(ex.Message);
-                //}
+                    var init = services.GetRequiredService<IDBInitializer>();
+                    init.Initialize();
+                /*
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                    throw new Exception(ex.Message);
+                }*/
             }
             
             host.Run();
