@@ -18,10 +18,35 @@ namespace aspnet.Data
             //this.Database.Migrate();
         }
 
-        //protected override void OnModelCreating(ModelBuilder builder)
-        //{
-        //    base.OnModelCreating(builder);
-        //}
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Post>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Post>()
+               .HasMany(x => x.Comments)
+               .WithOne(x => x.Parent)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Comment<Post>>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Comment<Topic>>()
+                .HasOne(x => x.User)
+                .WithMany()
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Topic>()
+                .HasMany(x => x.Messages)
+                .WithOne(x => x.Parent)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{

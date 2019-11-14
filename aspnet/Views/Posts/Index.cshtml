@@ -1,31 +1,42 @@
-﻿@model  IEnumerable<aspnet.Models.Post>
+﻿@model IEnumerable<aspnet.Models.Post>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Posts";
 }
 
-<h2>Index</h2>
+<a asp-action="Create">Add post</a>
 
 
-    <ul>
+<div>
     @foreach (var post in Model)
     {
-    <li>
-        @Html.Raw(post.Text)
-        <im>@post.Time</im>
-        @*@if (post.Comments != null)
-        {
-        <ul>
-            @foreach (var comment in post.Comments)
-            {
-                <li>
-                    comment
-                </li>
-            }
-        </ul>
-        }*@
-        
-    </li>
+        <div>
+            <div style="text-align:end">
+                <span>
+
+                </span>
+            </div>
+            <div style="text-align:center">
+                <span>
+                    Title
+                </span>
+            </div>
+            <div>
+                Body
+            </div>
+
+            <div style="display:flex">
+                <span style="margin-right:auto">
+                    1
+                </span>
+                <span>
+                    2
+                </span>
+            </div>
+            <textarea style="width:100%; height:200px">
+
+            </textarea>
+        </div>
     }
-</ul>
-    
+</div>
+

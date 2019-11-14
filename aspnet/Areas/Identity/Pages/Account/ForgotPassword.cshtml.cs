@@ -14,13 +14,11 @@ namespace aspnet.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly UserManager<Models.User> _userManager;
 
-        public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<Models.User> userManager)
         {
             _userManager = userManager;
-            _emailSender = emailSender;
         }
 
         [BindProperty]
@@ -52,11 +50,6 @@ namespace aspnet.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { code },
                     protocol: Request.Scheme);
-
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }

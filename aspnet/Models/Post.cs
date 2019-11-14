@@ -10,16 +10,20 @@ namespace aspnet.Models
 {
     public class Post
     {
-        public Post(string text)
+        public Post() { }
+        public Post(string title, DateTime time)
         {
-            this.Text = text;
+            this.Title = title;
+            this.Time = time;
             this.Comments = null;
         }
 
-        public Post(string text, User user) : this(text)
+        public Post(string title, string text, User user, DateTime time) : this(text)
         {
+            this.Title = title;
+            this.Text = text;
             this.User = user;
-            this.Time = DateTime.Now;
+            this.Time = time;
             this.Comments = null;
         }
 
@@ -28,6 +32,7 @@ namespace aspnet.Models
         public string UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
+        public string Title { get; set; }
         public string Text { get; set; }
         [DataType(DataType.DateTime)]
         public DateTime Time { get; set; }
