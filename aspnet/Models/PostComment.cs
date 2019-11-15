@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace aspnet.Models
 {
-    public class PostComment
+    public class PostComment : Comment
     {
         public static PostComment Create(string text, User user)
         {
@@ -17,16 +17,6 @@ namespace aspnet.Models
             obj.CreationTime = DateTime.Now;
             return obj;
         }
-        [Key]
-        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int CommentId { get; set; }
-        public string UserId { get; set; }
-        [ForeignKey("UserId")]
-        public User User { get; set; }
-        [Required]
-        public string Text { get; set; }
-        [Required]
-        public DateTime CreationTime { get; set; }
         public int PostId { get; set; }
         [ForeignKey("PostId")]
         public Post Post { get; set; }

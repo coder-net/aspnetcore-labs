@@ -85,13 +85,14 @@ namespace aspnet.Controllers
             if (isAuntificated)
                 user = await _userManager.FindByNameAsync(User.Identity.Name);
             bool isAdmin = false;
-            if (isAuntificated && await _userManager.IsInRoleAsync(user, "admin"))
+            if (isAuntificated && (await _userManager.IsInRoleAsync(user, "admin") || user.Id == post.UserId))
                 isAdmin = true;
             PostDetailsViewModel model = new PostDetailsViewModel
             {
                 Id = post.PostId,
                 Title = post.Title,
                 Text = Markdown.ToHtml(post.Text),
+                Time = post.Time,
                 User = await _userManager.FindByIdAsync(post.UserId),
                 Comments = _context.PostComments.Where(x => x.PostId == post.PostId).OrderByDescending(x => x.CreationTime).ToList(),
                 IsAdmin = isAdmin

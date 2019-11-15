@@ -4,15 +4,24 @@
     ViewData["Title"] = "Posts";
 }
 
-@if (User.Identity.IsAuthenticated)
-{
-<div>
-    <a style="margin:10px" class="btn btn-sm btn-default" asp-action="Create">Add post</a>
+
+<div class="row">
+    <div class="col-md-2">
+        <h1 class="my-4">
+            Posts
+        </h1>
+    </div>
+    <div class="col-md-5">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-default" style="margin-top:25px" asp-action="Create">Add post</a>
+        }
+    </div>
 </div>
-}
 
 @foreach (var post in Model)
 {
+    @**
     <hr />
     <div>
         <div style="text-align:end">
@@ -35,9 +44,26 @@
                 </form>
             </div>
         </div>
-       
-    </div>
 
+    </div>
+    **@
+    <div class="container">
+
+        <!-- Page Heading -->
+        <!-- Project One -->
+        <div class="row">
+            
+            <div class="col-md-3">
+                <h3>@post.Title</h3>
+                <p><b>User: </b>@post.User.UserName</p>
+                <p><b>Data: </b>@post.Time.ToShortDateString()</p>
+                <a class="btn btn-lg' btn-info" asp-action="Details" asp-route-id="@post.PostId">More</a>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <hr>
+    </div>
 }
 
 
