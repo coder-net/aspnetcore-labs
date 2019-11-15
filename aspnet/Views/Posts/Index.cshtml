@@ -27,7 +27,7 @@
         </div>
         <div style="display:flex">
             <h4 style="margin-right:auto">
-                <b>Created in: </b>@post.Time.ToShortDateString()
+                <b>Created on: </b>@post.Time.ToShortDateString()
             </h4>
             <div style="margin-left:auto">
                 <form asp-action="Delete" asp-route-id="@post.PostId" method="post">

@@ -11,6 +11,7 @@ namespace aspnet.Data
     {
         public DbSet<Post> PostModels { get; set; }
         public DbSet<Topic> TopicModels { get; set; }
+        public DbSet<PostComment> PostComments { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -32,10 +33,10 @@ namespace aspnet.Data
                .WithOne(x => x.Post)
                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Comment<Post>>()
+            builder.Entity<PostComment>()
                 .HasOne(x => x.User)
-                .WithMany();
-                //.OnDelete(DeleteBehavior.Cascade);
+                .WithMany()
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Comment<Topic>>()
                 .HasOne(x => x.User)

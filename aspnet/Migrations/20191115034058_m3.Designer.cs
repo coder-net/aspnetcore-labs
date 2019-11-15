@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aspnet.Data;
 
-namespace aspnet.Data.Migrations
+namespace aspnet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191115022503_m8")]
-    partial class m8
+    [Migration("20191115034058_m3")]
+    partial class m3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,28 +20,6 @@ namespace aspnet.Data.Migrations
                 .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Post>", b =>
-                {
-                    b.Property<int>("CommentId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<int>("ParentId");
-
-                    b.Property<string>("Text")
-                        .IsRequired();
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("CommentId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Comment<Post>");
-                });
 
             modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Topic>", b =>
                 {
@@ -111,7 +89,7 @@ namespace aspnet.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PostComment");
+                    b.ToTable("PostComments");
                 });
 
             modelBuilder.Entity("aspnet.Models.Topic", b =>
@@ -307,13 +285,6 @@ namespace aspnet.Data.Migrations
                     b.HasDiscriminator().HasValue("User");
                 });
 
-            modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Post>", b =>
-                {
-                    b.HasOne("aspnet.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("aspnet.Models.Comment<aspnet.Models.Topic>", b =>
                 {
                     b.HasOne("aspnet.Models.Topic")
@@ -343,7 +314,8 @@ namespace aspnet.Data.Migrations
 
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,18 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace aspnet.Data.Migrations
+namespace aspnet.Migrations
 {
-    public partial class m5 : Migration
+    public partial class m3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Comment<Post>_AspNetUsers_UserId",
-                table: "Comment<Post>");
+                name: "FK_PostComments_AspNetUsers_UserId",
+                table: "PostComments");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Comment<Post>_AspNetUsers_UserId",
-                table: "Comment<Post>",
+                name: "FK_PostComments_AspNetUsers_UserId",
+                table: "PostComments",
                 column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
@@ -22,12 +22,12 @@ namespace aspnet.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Comment<Post>_AspNetUsers_UserId",
-                table: "Comment<Post>");
+                name: "FK_PostComments_AspNetUsers_UserId",
+                table: "PostComments");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Comment<Post>_AspNetUsers_UserId",
-                table: "Comment<Post>",
+                name: "FK_PostComments_AspNetUsers_UserId",
+                table: "PostComments",
                 column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",

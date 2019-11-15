@@ -28,6 +28,7 @@ namespace aspnet.Models
         }
 
         [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int PostId { get; set; }
         public string UserId { get; set; }
         [ForeignKey("UserId")]

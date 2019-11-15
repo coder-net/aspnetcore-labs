@@ -93,7 +93,7 @@ namespace aspnet.Controllers
                 Title = post.Title,
                 Text = Markdown.ToHtml(post.Text),
                 User = await _userManager.FindByIdAsync(post.UserId),
-                Comments = post.Comments,
+                Comments = _context.PostComments.Where(x => x.PostId == post.PostId).OrderByDescending(x => x.CreationTime).ToList(),
                 IsAdmin = isAdmin
             };
             return View(model);
@@ -173,7 +173,8 @@ namespace aspnet.Controllers
                     {
                         User = user,
                         CreationTime = DateTime.Now,
-                        Text = model.NewComment
+                        Text = model.NewComment,
+                        PostId = model.Id
                     };
                     if (post.Comments is null)
                     {
@@ -186,7 +187,8 @@ namespace aspnet.Controllers
                     {
                         post.Comments.Add(comment);
                     }
-                    await _context.PostModels.AddAsync(post);
+                    _context.PostComments.Add(comment);
+                    _context.PostModels.Update(post);
                     await _context.SaveChangesAsync();
                 }
             }
