@@ -1,0 +1,58 @@
+﻿@model aspnet.ViewModel.PostDetailsViewModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+@if (Model.IsAdmin)
+{
+
+    <form asp-action="Delete" asp-controller="Posts" method="post" asp-route-id="@Model.Id">
+        <a style="margin:10px" class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <button type="submit" class="btn btn-sm btn-danger">
+            Delete
+        </button>
+    </form>
+}
+
+<h2>Details</h2>
+
+<div>
+    <h3>Created by:</h3>
+    @Model.User.UserName
+</div>
+
+<h2>Title</h2>
+<hr />
+<span>
+    @Model.Title
+</span>
+<hr />
+<h2>Content</h2>
+<hr />
+<span>
+    @Html.Raw(Model.Text)
+</span>
+<hr />
+<h4>
+    Comments
+</h4>
+@if (User.Identity.IsAuthenticated)
+{
+    <form asp-action="AddComment" asp-controller="Posts" asp-route-id="@Model.Id" method="post">
+<textarea style="margin:10px" placeholder="Your comment..."
+          class="form-control" id="descriptiontext" rows="3" asp-for="NewComment"></textarea>
+
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-success" />
+        </div>
+    </form>
+}
+@if (Model.Comments != null)
+{
+    @foreach (var comment in Model.Comments)
+    {
+        <div>
+            @comment.Text
+        </div>
+    }
+}

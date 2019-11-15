@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace aspnet.Models
 {
-    public class Comment<T>
+    public class PostComment
     {
-        public static Comment<T> Create(string text, User user, int parentId)
+        public static PostComment Create(string text, User user)
         {
-            var obj = new Comment<T>();
+            var obj = new PostComment();
             obj.User = user;
             obj.Text = text;
             obj.CreationTime = DateTime.Now;
-            obj.ParentId = parentId;
             return obj;
         }
         [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int CommentId { get; set; }
         public string UserId { get; set; }
         [ForeignKey("UserId")]
@@ -28,6 +27,9 @@ namespace aspnet.Models
         public string Text { get; set; }
         [Required]
         public DateTime CreationTime { get; set; }
-        public int ParentId { get; set; }
+        public int PostId { get; set; }
+        [ForeignKey("PostId")]
+        public Post Post { get; set; }
+
     }
 }

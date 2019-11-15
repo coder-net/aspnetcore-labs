@@ -1,42 +1,43 @@
-﻿@model IEnumerable<aspnet.Models.Post>
+﻿@model IEnumerable<aspnet.ViewModel.ShortPostViewModel>
 
 @{
     ViewData["Title"] = "Posts";
 }
 
-<a asp-action="Create">Add post</a>
-
-
+@if (User.Identity.IsAuthenticated)
+{
 <div>
-    @foreach (var post in Model)
-    {
-        <div>
-            <div style="text-align:end">
-                <span>
-
-                </span>
-            </div>
-            <div style="text-align:center">
-                <span>
-                    Title
-                </span>
-            </div>
-            <div>
-                Body
-            </div>
-
-            <div style="display:flex">
-                <span style="margin-right:auto">
-                    1
-                </span>
-                <span>
-                    2
-                </span>
-            </div>
-            <textarea style="width:100%; height:200px">
-
-            </textarea>
-        </div>
-    }
+    <a style="margin:10px" class="btn btn-sm btn-default" asp-action="Create">Add post</a>
 </div>
+}
+
+@foreach (var post in Model)
+{
+    <hr />
+    <div>
+        <div style="text-align:end">
+            <h5>
+                <b>Created by: </b>@post.User.UserName
+            </h5>
+        </div>
+        <div style="text-align:center">
+            <h2>
+                @post.Title
+            </h2>
+        </div>
+        <div style="display:flex">
+            <h4 style="margin-right:auto">
+                <b>Created in: </b>@post.Time.ToShortDateString()
+            </h4>
+            <div style="margin-left:auto">
+                <form asp-action="Delete" asp-route-id="@post.PostId" method="post">
+                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@post.PostId">Details</a>
+                </form>
+            </div>
+        </div>
+       
+    </div>
+
+}
+
 

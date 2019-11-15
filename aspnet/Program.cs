@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using aspnet.Data;
+using aspnet.Models;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +17,7 @@ namespace aspnet
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateWebHostBuilder(args).Build();
             
@@ -24,6 +26,9 @@ namespace aspnet
                 var services = scope.ServiceProvider;
                 //try
                 //{
+                    var userManager = services.GetRequiredService<UserManager<User>>();
+                    var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await RoleInitializer.InitializeAsync(userManager, rolesManager);
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     var init = services.GetRequiredService<IDBInitializer>();
                     init.Initialize();

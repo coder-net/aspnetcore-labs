@@ -15,16 +15,16 @@ namespace aspnet.Models
         {
             this.Title = title;
             this.Time = time;
-            this.Comments = null;
+            this.Comments = new List<PostComment>();
         }
 
-        public Post(string title, string text, User user, DateTime time) : this(text)
+        public Post(string title, string text, User user, DateTime time)
         {
             this.Title = title;
             this.Text = text;
             this.User = user;
             this.Time = time;
-            this.Comments = null;
+            this.Comments = new List<PostComment>();
         }
 
         [Key]
@@ -37,6 +37,6 @@ namespace aspnet.Models
         [DataType(DataType.DateTime)]
         public DateTime Time { get; set; }
 
-        public ICollection<Comment<Post>> Comments { get; set; }
+        public ICollection<PostComment> Comments { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace aspnet.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
@@ -17,7 +18,6 @@ namespace aspnet.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "admin")]
         public IActionResult Index() => View(_userManager.Users.ToList());
 
         public IActionResult Create() => View();

@@ -29,23 +29,23 @@ namespace aspnet.Data
 
             builder.Entity<Post>()
                .HasMany(x => x.Comments)
-               .WithOne(x => x.Parent)
+               .WithOne(x => x.Post)
                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Comment<Post>>()
                 .HasOne(x => x.User)
-                .WithMany()
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany();
+                //.OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Comment<Topic>>()
                 .HasOne(x => x.User)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<Topic>()
-                .HasMany(x => x.Messages)
-                .WithOne(x => x.Parent)
-                .OnDelete(DeleteBehavior.Cascade);
+            //builder.Entity<Topic>()
+            //    .HasMany(x => x.Messages)
+            //    .WithOne(x => x.ParentId)
+            //    .OnDelete(DeleteBehavior.Cascade);
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

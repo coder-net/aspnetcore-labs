@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace aspnet.ViewModel
 {
-    public class CreatePostViewModel
+    public class ShortPostViewModel
     {
-        public string Text { get; set; }
-
+        public int PostId { get; set; }
+        public User User { get; set; }
         public string Title { get; set; }
+        public DateTime Time { get; set; }
     }
 }

@@ -10,13 +10,14 @@ namespace aspnet.Models
     {
         public Topic()
         {
-
+            Messages = new List<Comment<Topic>>();
         }
         public Topic(string name)
         {
             TopicName = name;
             CreationTime = DateTime.Now;
             LastChangeTime = DateTime.Now;
+            Messages = new List<Comment<Topic>>();
         }
 
         [Key]

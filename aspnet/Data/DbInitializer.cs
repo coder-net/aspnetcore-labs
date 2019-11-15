@@ -44,15 +44,15 @@ namespace aspnet.Data
 
             var posts = new Post[]
             {
-                new Post("<h1>H1</h1>", user1),
+                new Post("Some title", "text", user1, DateTime.Now),
                 //new PostModel("<b>Bolt</b>"),
                 //new PostModel("<h2>H2</h2>")
             };
 
-            var comments = new Comment<Post>[]
+            var comments = new PostComment[]
             {
-                Comment<Post>.Create("Comment", user1, posts[0]),
-                Comment<Post>.Create("Comment2", user2, posts[0])
+                PostComment.Create("Comment", user1),
+                PostComment.Create("Comment2", user2)
             };
             posts[0].Comments = comments;
 
