@@ -196,5 +196,56 @@ namespace aspnet.Controllers
             return RedirectToAction("Details", new { id = model.Id });
         }
 
+        public async Task<IActionResult> EditComment(int id)
+        {
+            var comment = await _context.PostComments.FindAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            var model = new EditCommentViewModel
+            {
+                Id = id,
+                Text = comment.Text
+            };
+            return View("EditComment", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditComment(EditPostViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var comment = await _context.PostComments.FindAsync(model.Id);
+                if (comment != null)
+                {
+                    comment.Text = model.Text;
+
+                    var result = _context.PostComments.Update(comment);
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", new { id = comment.PostId });
+                }
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteComment(int id)
+        {
+            var comment = await _context.PostComments.FindAsync(id);
+            if (comment != null)
+            {
+                int postId = comment.PostId;
+                var result = _context.PostComments.Remove(comment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = postId });
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+            
+        }
     }
 }

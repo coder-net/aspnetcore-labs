@@ -142,6 +142,11 @@
                 @comment.Text
             </div>
         </div>
-
+        <form asp-action="DeleteComment" asp-controller="Posts" method="post" asp-route-id="@comment.Id">
+            <a class="btn btn-sm btn-primary" asp-action="EditComment" asp-route-id="@comment.Id">Edit</a>
+            <button type="submit" class="btn btn-sm btn-danger">
+                Delete
+            </button>
+        </form>
     }
 }

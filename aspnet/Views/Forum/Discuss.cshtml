@@ -1,0 +1,35 @@
+﻿@model aspnet.ViewModel.DiscussViewModel
+@{
+    ViewData["Title"] = "Discuss";
+}
+
+<h2>@Model.Name</h2>
+
+<h4>@Model.Description</h4>
+
+<hr />
+@if (Model.Messages != null)
+{
+    @foreach (var message in Model.Messages)
+    {
+        <span style="font-family:'Times New Roman'">
+            @message.Text
+        </span>
+        <hr />
+    }
+}
+
+<h3>Write your message</h3>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <hr />
+    <form asp-action="AddComment" asp-controller="Forum" asp-route-id="@Model.Id" method="post">
+<textarea style="margin:10px" placeholder="Your comment..."
+          class="form-control" id="descriptiontext" rows="3" asp-for="Description"></textarea>
+
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-success" />
+        </div>
+    </form>
+}

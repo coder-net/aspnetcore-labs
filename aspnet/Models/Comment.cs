@@ -19,5 +19,8 @@ namespace aspnet.Models
         public string Text { get; set; }
         [Required]
         public DateTime CreationTime { get; set; }
+
+        public string UserName { get; set; }
+
     }
 }

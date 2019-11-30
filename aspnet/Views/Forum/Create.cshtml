@@ -1,0 +1,25 @@
+﻿@model aspnet.ViewModel.CreateTopicViewModel
+@{
+    ViewBag.Title = "Create new topic";
+}
+
+<div>
+    <h2>Create new topic</h2>
+</div>
+
+<form asp-action="Create" asp-controller="Forum">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name" class="control-label">Name</label>
+        <textarea placeholder="Topic name"
+                  class="form-control" id="descriptiontext" rows="2" asp-for="Name"></textarea>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label">Description</label>
+        <textarea placeholder="Short description"
+                  class="form-control" id="descriptiontext" rows="3" asp-for="Description"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Добавить" class="btn btn-default" />
+    </div>
+</form>

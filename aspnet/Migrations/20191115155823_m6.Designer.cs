@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aspnet.Data;
 
 namespace aspnet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191115155823_m6")]
+    partial class m6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,8 +57,6 @@ namespace aspnet.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<string>("UserName");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
@@ -68,7 +68,7 @@ namespace aspnet.Migrations
 
             modelBuilder.Entity("aspnet.Models.Topic", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("TopicId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -80,11 +80,7 @@ namespace aspnet.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
+                    b.HasKey("TopicId");
 
                     b.ToTable("TopicModels");
                 });
@@ -103,8 +99,6 @@ namespace aspnet.Migrations
                     b.Property<int>("TopicId");
 
                     b.Property<string>("UserId");
-
-                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
@@ -296,7 +290,7 @@ namespace aspnet.Migrations
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("aspnet.Models.PostComment", b =>
@@ -304,19 +298,12 @@ namespace aspnet.Migrations
                     b.HasOne("aspnet.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("aspnet.Models.Topic", b =>
-                {
-                    b.HasOne("aspnet.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("aspnet.Models.TopicMessage", b =>
@@ -329,7 +316,7 @@ namespace aspnet.Migrations
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

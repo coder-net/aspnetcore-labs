@@ -1,7 +1,34 @@
-﻿
+﻿@model IEnumerable<aspnet.Models.Topic>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h2>Forum</h2>
+<div class="row">
+    <div class="col-md-2">
+        <h1 class="my-4">
+            Forum
+        </h1>
+    </div>
+    <div class="col-md-5">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-default" style="margin-top:25px" asp-action="Create">Add topic</a>
+        }
+    </div>
+</div>
 
+<hr />
+
+@foreach (var topic in Model)
+{
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <h3>@topic.Name</h3>
+        </div>
+    </div>
+    <h5>@topic.Description</h5>
+
+
+    <a class="btn btn-info" asp-action="Discuss" asp-route-id="@topic.Id">Discuss</a>
+}

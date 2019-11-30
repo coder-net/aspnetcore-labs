@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using aspnet.Data;
 
 namespace aspnet.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191115165144_m7")]
+    partial class m7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,8 +56,6 @@ namespace aspnet.Migrations
                         .IsRequired();
 
                     b.Property<string>("UserId");
-
-                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
@@ -103,8 +103,6 @@ namespace aspnet.Migrations
                     b.Property<int>("TopicId");
 
                     b.Property<string>("UserId");
-
-                    b.Property<string>("UserName");
 
                     b.HasKey("Id");
 
@@ -296,7 +294,7 @@ namespace aspnet.Migrations
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("aspnet.Models.PostComment", b =>
@@ -304,7 +302,7 @@ namespace aspnet.Migrations
                     b.HasOne("aspnet.Models.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
@@ -329,7 +327,7 @@ namespace aspnet.Migrations
                     b.HasOne("aspnet.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
