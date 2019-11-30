@@ -13,6 +13,7 @@ using aspnet.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using aspnet.Models;
+using aspnet.Hubs;     
 
 namespace aspnet
 {
@@ -47,6 +48,8 @@ namespace aspnet
             services.AddTransient<Data.IDBInitializer, Data.DbInitializer>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,11 +71,18 @@ namespace aspnet
             app.UseCookiePolicy();
             app.UseAuthentication();
 
+
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/kek");
             });
         }
     }

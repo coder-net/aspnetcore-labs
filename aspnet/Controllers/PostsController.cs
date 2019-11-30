@@ -72,6 +72,48 @@ namespace aspnet.Controllers
             }
             return View(model);
         }
+        [HttpPost]
+        public async Task<ActionResult> AddComment(PostDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user is null)
+                {
+                    throw new InvalidOperationException("There is no current user.");
+                }
+                Post post = await _context.PostModels.FindAsync(model.Id);
+                if (String.IsNullOrWhiteSpace(model.NewComment))
+                {
+                    ModelState.AddModelError(String.Empty, "Comment must be provided.");
+                }
+                else
+                {
+                    var comment = new PostComment
+                    {
+                        User = user,
+                        CreationTime = DateTime.Now,
+                        Text = model.NewComment,
+                        PostId = model.Id
+                    };
+                    if (post.Comments is null)
+                    {
+                        post.Comments = new List<PostComment>()
+                        {
+                            comment
+                        };
+                    }
+                    else
+                    {
+                        post.Comments.Add(comment);
+                    }
+                    _context.PostComments.Add(comment);
+                    _context.PostModels.Update(post);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            return RedirectToAction("Details", new { id = model.Id });
+        }
 
         public async Task<IActionResult> Details(int id)
         {
@@ -153,48 +195,7 @@ namespace aspnet.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<ActionResult> AddComment(PostDetailsViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                User user = await _userManager.FindByNameAsync(User.Identity.Name);
-                if (user is null)
-                {
-                    throw new InvalidOperationException("There is no current user.");
-                }
-                Post post = await _context.PostModels.FindAsync(model.Id);
-                if (String.IsNullOrWhiteSpace(model.NewComment))
-                {
-                    ModelState.AddModelError(String.Empty, "Comment must be provided.");
-                }
-                else
-                {
-                    var comment = new PostComment
-                    {
-                        User = user,
-                        CreationTime = DateTime.Now,
-                        Text = model.NewComment,
-                        PostId = model.Id
-                    };
-                    if (post.Comments is null)
-                    {
-                        post.Comments = new List<PostComment>()
-                        {
-                            comment
-                        };
-                    }
-                    else
-                    {
-                        post.Comments.Add(comment);
-                    }
-                    _context.PostComments.Add(comment);
-                    _context.PostModels.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            return RedirectToAction("Details", new { id = model.Id });
-        }
+       
 
         public async Task<IActionResult> EditComment(int id)
         {

@@ -8,6 +8,7 @@ using aspnet.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspnet.Controllers
 {
@@ -67,6 +68,7 @@ namespace aspnet.Controllers
 
         public async Task<IActionResult> Discuss(int id)
         {
+            //var topic = _context.TopicModels.Include(x => x.Messages).FirstOrDefault(x => x.Id == id);//.FindAsync(id);
             var topic = await _context.TopicModels.FindAsync(id);
             if (topic == null)
             {
@@ -86,53 +88,23 @@ namespace aspnet.Controllers
                 Description = topic.Description,
                 CreationTime = topic.CreationTime,
                 User = await _userManager.FindByIdAsync(topic.UserId),
-                Messages = _context.TopicMessages.Where(x => x.Id == topic.Id).OrderBy(x => x.CreationTime).ToList(),
+                Messages = _context.TopicMessages.Where(x => x.TopicId == topic.Id).OrderBy(x => x.CreationTime).ToList(),
                 IsAdmin = isAdmin
             };
             return View(model);
         }
 
-        //public async Task<ActionResult> AddComment(DiscussViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        User user = await _userManager.FindByNameAsync(User.Identity.Name);
-        //        if (user is null)
-        //        {
-        //            throw new InvalidOperationException("There is no current user.");
-        //        }
-        //        Post post = await _context.PostModels.FindAsync(model.Id);
-        //        if (String.IsNullOrWhiteSpace(model.NewComment))
-        //        {
-        //            ModelState.AddModelError(String.Empty, "Comment must be provided.");
-        //        }
-        //        else
-        //        {
-        //            var comment = new PostComment
-        //            {
-        //                User = user,
-        //                CreationTime = DateTime.Now,
-        //                Text = model.NewComment,
-        //                PostId = model.Id
-        //            };
-        //            if (post.Comments is null)
-        //            {
-        //                post.Comments = new List<PostComment>()
-        //                {
-        //                    comment
-        //                };
-        //            }
-        //            else
-        //            {
-        //                post.Comments.Add(comment);
-        //            }
-        //            _context.PostComments.Add(comment);
-        //            _context.PostModels.Update(post);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //    }
-        //    return RedirectToAction("Details", new { id = model.Id });
-        //}
+
+        [HttpPost]
+        public async Task<IActionResult> Discuss(int id, string messageInput, string UserName)
+        {
+            var topic = _context.TopicModels.Include(x => x.Messages).FirstOrDefault(x=>x.Id == id);
+
+
+            
+
+            return View(topic);
+        }
 
 
         public async Task<IActionResult> EditComment(int id)

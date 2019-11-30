@@ -1,11 +1,11 @@
-﻿@*@model aspnet.Models.Project
+﻿@model aspnet.Models.Post
 
-@foreach (var commentary in Model.Comments.Reverse())
+@foreach (var commentary in Model.Comments)
 {
     <div id="commentdiv">
         <div class="card text">
             <div class="card-header">
-                <b>@commentary.UserName</b> commented at @commentary.Date
+                <b>@commentary.UserName</b> commented at @commentary.CreationTime
             </div>
             <div class="card-body">
                 <a>@commentary.Text</a>
@@ -16,4 +16,4 @@
 }
 
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
-<script src="~/js/chat.js"></script>*@
+<script src="~/js/chat.js"></script>
