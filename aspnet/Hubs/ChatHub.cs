@@ -33,7 +33,7 @@ namespace aspnet.Hubs
 
             _context.TopicModels.Update(topic);
             
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            await Clients.All.SendAsync("ReceiveMessage", user, message, DateTime.Now.ToString());
 
             await _context.SaveChangesAsync();
         }

@@ -3,13 +3,14 @@
     ViewData["Title"] = "Discuss";
 }
 
-    
+
 
 <h2>@Model.Name</h2>
 
 <h4>@Model.Description</h4>
 
 <hr />
+
 @if (Model.Messages != null)
 {
     @foreach (var message in Model.Messages)
@@ -27,22 +28,7 @@
     <input hidden name="UserName" id="UserName" type="text" value="@User.Identity.Name">
     <input hidden value="@Model.Id" name="id" id="id">
     <div class="container">
-        <div class="row">&nbsp;</div>
-        <div class="row">
-            <div class="col-6">&nbsp;</div>
-            <div class="col-6">
-                User..........<input type="text" id="userInput" />
-                <br />
-                Message...<input type="text" name="messageInput" id="messageInput" />
 
-
-
-                <div class="form-group">
-                    <input type="submit" value="Submit" name="sendButton" class="btn btn-success" id="sendButton"/>
-                </div>
-
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <hr />
@@ -53,6 +39,23 @@
             <div class="col-6">
                 <ul id="messagesList"></ul>
             </div>
+        </div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-6">&nbsp;</div>
+        <div class="col-6">
+            @*User..........<input type="text" id="userInput" />
+                <br />
+                Message...<input type="text" name="messageInput" id="messageInput" />*@
+            <textarea style="margin:10px" placeholder="Your comment..."
+                      class="form-control" rows="3" name="messageInput" id="messageInput"></textarea>
+
+
+            <div class="form-group">
+                <input type="submit" value="Submit" name="sendButton" class="btn btn-success" id="sendButton" />
+            </div>
+
         </div>
     </div>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>

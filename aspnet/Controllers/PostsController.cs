@@ -133,12 +133,17 @@ namespace aspnet.Controllers
             {
                 Id = post.PostId,
                 Title = post.Title,
-                Text = Markdown.ToHtml(post.Text),
+                Text = post.Text,
                 Time = post.Time,
                 User = await _userManager.FindByIdAsync(post.UserId),
-                Comments = _context.PostComments.Where(x => x.PostId == post.PostId).OrderByDescending(x => x.CreationTime).ToList(),
+                CurrentUser = await _userManager.GetUserAsync(HttpContext.User),
+            Comments = _context.PostComments.Where(x => x.PostId == post.PostId).OrderByDescending(x => x.CreationTime).ToList(),
                 IsAdmin = isAdmin
             };
+            foreach (var comment in model.Comments)
+            {
+                comment.User = await _userManager.FindByIdAsync(comment.UserId);
+            }
             return View(model);
         }
 
