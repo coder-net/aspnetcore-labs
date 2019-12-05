@@ -1,5 +1,6 @@
 ﻿using aspnet.Data;
 using aspnet.Models;
+using Markdig;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -28,12 +29,24 @@ namespace aspnet.Hubs
             {
                 topic.Messages = new List<TopicMessage>();
             }
-            AddCommentary(topic, message, user);
 
+            User AspNetUser = await _userManager.FindByNameAsync(user);
+            var commentary = new TopicMessage
+            {
+                CreationTime = DateTime.Now,
+                User = AspNetUser,
+                UserId = AspNetUser.Id,
+                UserName = AspNetUser.UserName,
+                Text = message,
+                Topic = topic,
+                TopicId = topic.Id,
+            };
+
+            topic.Messages.Add(commentary);
 
             _context.TopicModels.Update(topic);
             
-            await Clients.All.SendAsync("ReceiveMessage", user, message, DateTime.Now.ToString());
+            await Clients.All.SendAsync("ReceiveMessage", user, Markdown.ToHtml(message), DateTime.Now.ToString());
 
             await _context.SaveChangesAsync();
         }
@@ -53,6 +66,7 @@ namespace aspnet.Hubs
             };
 
             topic.Messages.Add(commentary);
+            _context.SaveChanges();
         }
 
     }

@@ -2,15 +2,22 @@
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/kek").build();
 
+updateMessages = (messageText) => {
+    const container = $('#message-container-id');
+    container.append(`
+        <span style="font-family:'Times New Roman'">
+                ${messageText}
+        </span>
+        <hr/>
+    `);
+
+}
+
 //Disable send button until connection is established
 document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessage", function (user, message, date) {
-    var msg = message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var encodedMsg = user + " says " + msg + " " + date;
-    var li = document.createElement("li");
-    li.textContent = encodedMsg;
-    document.getElementById("messagesList").appendChild(li);
+    updateMessages(message);
 });
 
 connection.start().then(function () {

@@ -3,87 +3,6 @@
     ViewData["Title"] = "Details";
 }
 
-<style>
-    .article-clean {
-        color: #56585b;
-        background-color: #fff;
-        font-family: 'Lora', serif;
-        font-size: 14px;
-    }
-
-        .article-clean .intro {
-            font-size: 16px;
-            margin: 0 auto 30px;
-        }
-
-            .article-clean .intro h1 {
-                font-size: 32px;
-                margin-bottom: 15px;
-                padding-top: 20px;
-                line-height: 1.5;
-                color: inherit;
-                margin-top: 20px;
-            }
-
-            .article-clean .intro p {
-                color: #929292;
-                font-size: 12px;
-            }
-
-                .article-clean .intro p .by {
-                    font-style: italic;
-                }
-
-                .article-clean .intro p .date {
-                    text-transform: uppercase;
-                    padding: 4px 0 4px 10px;
-                    margin-left: 10px;
-                    border-left: 1px solid #ddd;
-                }
-
-                .article-clean .intro p a {
-                    color: #333;
-                    text-transform: uppercase;
-                    padding-left: 3px;
-                }
-
-            .article-clean .intro img {
-                margin-top: 20px;
-            }
-
-        .article-clean .text p {
-            margin-bottom: 20px;
-            line-height: 1.45;
-        }
-
-
-        .article-clean .text h2 {
-            margin-top: 28px;
-            margin-bottom: 20px;
-            line-height: 1.45;
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-        }
-
-
-        .article-clean .text figure {
-            text-align: center;
-            margin-top: 30px;
-            margin-bottom: 20px;
-        }
-
-            .article-clean .text figure img {
-                margin-bottom: 12px;
-                max-width: 100%;
-            }
-
-    .container-border {
-        border: 1px solid #ccc;
-        border-radius: 15px;
-    }
-</style>
-
 @if (Model.IsAdmin)
 {
 
@@ -101,10 +20,10 @@
             <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
                 <div class="intro">
                     <h1 class="text-center">@Model.Title</h1>
-                    <p class="text-center"><span class="by">by</span> <a href="#">@Model.User.UserName</a><span class="date"> @Model.Time.ToShortDateString()</span></p>
+                    <p class="text-center" style="font-size:20px"><span class="by">by</span> <a href="#">@Model.User.UserName</a> | <span class="date"> @Model.Time.ToString()</span></p>
                 </div>
-                <div class="text">
-                    <markdown content="@Model.Text"/>
+                <div class="center-block" style="margin: 0 auto; background: gray; padding: 10px; border: 2px gray; border-radius: 10px;">
+                    <markdown content="@Model.Text" />
                 </div>
             </div>
         </div>
@@ -113,10 +32,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
 
+<hr/>
 
-<h4>
+<h2>
     Comments
-</h4>
+</h2>
 @if (User.Identity.IsAuthenticated)
 {
     <hr />
@@ -129,26 +49,40 @@
         </div>
     </form>
 }
+
+<hr/>
+
 @if (Model.Comments != null)
 {
     @foreach (var comment in Model.Comments)
     {
-        <div style="border:1px solid">
-            <div class="intro" style="margin-left:20px">
-                <p class=""><span class="by">by</span> <a href="#">@comment.User.UserName</a><span class="date"> @Model.Time.ToShortDateString()</span></p>
-            </div>
-            <hr />
+        <div style="margin:10px; padding:10px">
+            <div style="display:flex">
+                <div style="margin-right:auto; font-size:12px">
+                    <span>by <a href="#">@comment.User.UserName</a></span>
+                    <span> @Model.Time.ToString()</span>
+                </div>
 
-            <markdown content="@comment.Text"/>
+                @if (Model.IsAdmin || Model.CurrentUser == comment.User)
+                {
+                    <div>
+                        <form asp-action="DeleteComment" asp-controller="Posts" method="post" asp-route-id="@comment.Id">
+                            <a class="btn btn-sm btn-default" asp-action="EditComment" asp-route-id="@comment.Id">Edit</a>
+                            <button type="submit" class="btn btn-sm ">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                }
+
+            </div>
+
+
+            <div style="margin-left:20px">
+                <markdown content="@comment.Text" />
+            </div>
         </div>
-        @if (Model.IsAdmin || Model.CurrentUser == comment.User)
-        {
-            <form asp-action="DeleteComment" asp-controller="Posts" method="post" asp-route-id="@comment.Id">
-                <a class="btn btn-sm btn-primary" asp-action="EditComment" asp-route-id="@comment.Id">Edit</a>
-                <button type="submit" class="btn btn-sm btn-danger">
-                    Delete
-                </button>
-            </form>
-         }
-     }
+
+        <hr/>
+    }
 }
