@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewData["Title"] = "Activity";
+}
+
+<h1><b>10 last messages</b></h1>
+
+<hr/>
+
+@await Component.InvokeAsync("RecentMessages")
+
