@@ -50,7 +50,7 @@ namespace aspnet.Hubs
             _context.SaveChanges();
             var comment = _context.TopicMessages.Where(x => x.CreationTime == creationTime && x.Text == message).First();
 
-            await Clients.All.SendAsync("ReceiveMessage", comment.Id.ToString(), user, Markdown.ToHtml(message), DateTime.Now.ToString());
+            await Clients.All.SendAsync("ReceiveMessage", comment.Id.ToString(), user, Markdown.ToHtml(message), creationTime.ToString());
 
         }
         
