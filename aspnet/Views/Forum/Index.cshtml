@@ -17,17 +17,17 @@
     </div>
 </div>
 
-<hr />
-
 @foreach (var topic in Model)
 {
     <hr />
     <div class="row">
         <div class="col-md-6">
-            <h3>@topic.Name</h3>
+            @*<h3>@topic.Name</h3>*@
+            <h3><markdown content="@topic.Name"/></h3>
         </div>
     </div>
-    <h5>@topic.Description</h5>
+    @*<h5>@topic.Description</h5>*@
+    <h5><markdown content="@topic.Description"/></h5>
 
 
     <a class="btn btn-info" asp-action="Discuss" asp-route-id="@topic.Id">Discuss</a>

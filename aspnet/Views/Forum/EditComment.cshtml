@@ -1,0 +1,17 @@
+﻿@model aspnet.ViewModel.EditCommentViewModel
+@{
+    ViewBag.Title = "Edit message";
+}
+<h2>Edit message</h2>
+
+<form asp-action="EditMessage" asp-controller="Forum">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Text" class="control-label">Content</label>
+        <textarea class="form-control" id="descriptiontext" rows="3" asp-for="Text"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-default" />
+    </div>
+</form>

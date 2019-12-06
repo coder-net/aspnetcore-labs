@@ -83,6 +83,7 @@ namespace aspnet
             app.UseSignalR(routes =>
             {
                 routes.MapHub<ChatHub>("/kek");
+                routes.MapHub<CommentsHub>("/commentshub");
             });
         }
     }

@@ -35,12 +35,12 @@ namespace aspnet.Data
             var user1 = new User();
             user1.Email = "a@gmail.com";
             _userManager.CreateAsync(user1, "Aa123!");
-            var user2 = new User();
-            user2.Email = "b@gmail.com";
-            _userManager.CreateAsync(user2, "Bb123!");
-            var user3 = new User();
-            user3.Email = "c@gmailc.om";
-            _userManager.CreateAsync(user3, "Cc123!");
+            //var user2 = new User();
+            //user2.Email = "b@gmail.com";
+            //_userManager.CreateAsync(user2, "Bb123!");
+            //var user3 = new User();
+            //user3.Email = "c@gmailc.om";
+            //_userManager.CreateAsync(user3, "Cc123!");
 
             var posts = new Post[]
             {
@@ -52,7 +52,6 @@ namespace aspnet.Data
             var comments = new PostComment[]
             {
                 PostComment.Create("Comment", user1),
-                PostComment.Create("Comment2", user2)
             };
             posts[0].Comments = comments;
 

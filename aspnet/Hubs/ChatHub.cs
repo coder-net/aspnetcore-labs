@@ -31,9 +31,10 @@ namespace aspnet.Hubs
             }
 
             User AspNetUser = await _userManager.FindByNameAsync(user);
+            DateTime creationTime = DateTime.Now;
             var commentary = new TopicMessage
             {
-                CreationTime = DateTime.Now,
+                CreationTime = creationTime,
                 User = AspNetUser,
                 UserId = AspNetUser.Id,
                 UserName = AspNetUser.UserName,
@@ -45,28 +46,21 @@ namespace aspnet.Hubs
             topic.Messages.Add(commentary);
 
             _context.TopicModels.Update(topic);
-            
-            await Clients.All.SendAsync("ReceiveMessage", user, Markdown.ToHtml(message), DateTime.Now.ToString());
 
-            await _context.SaveChangesAsync();
-        }
-
-        public async void AddCommentary(Topic topic, string NewCommentary, string UserName)
-        {
-            User AspNetUser = await _userManager.FindByNameAsync(UserName);
-            var commentary = new TopicMessage
-            {
-                CreationTime = DateTime.Now,
-                User = AspNetUser,
-                UserId = AspNetUser.Id,
-                UserName = AspNetUser.UserName,
-                Text = NewCommentary,
-                Topic = topic,
-                TopicId = topic.Id,
-            };
-
-            topic.Messages.Add(commentary);
             _context.SaveChanges();
+            var comment = _context.TopicMessages.Where(x => x.CreationTime == creationTime && x.Text == message).First();
+
+            await Clients.All.SendAsync("ReceiveMessage", comment.Id.ToString(), user, Markdown.ToHtml(message), DateTime.Now.ToString());
+
+        }
+        
+        public async Task DeleteMessage(string messageId)
+        {
+            int id = Convert.ToInt16(messageId);
+            _context.TopicMessages.Remove(_context.TopicMessages.Find(id));
+            await _context.SaveChangesAsync();
+
+            await Clients.All.SendAsync("DeleteMessageFrom", id.ToString());
         }
 
     }

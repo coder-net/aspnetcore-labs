@@ -7,8 +7,8 @@
 {
 
     <form asp-action="Delete" asp-controller="Posts" method="post" asp-route-id="@Model.Id">
-        <a style="margin:10px" class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <button type="submit" class="btn btn-sm btn-danger">
+        <a style="margin:10px" class="btn btn-sm btn-default" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <button type="submit" class="btn btn-sm">
             Delete
         </button>
     </form>
@@ -63,7 +63,7 @@
                     <span> @Model.Time.ToString()</span>
                 </div>
 
-                @if (Model.IsAdmin || Model.CurrentUser == comment.User)
+                @if (User.Identity.IsAuthenticated && (Model.IsAdmin || Model.CurrentUser == comment.User))
                 {
                     <div>
                         <form asp-action="DeleteComment" asp-controller="Posts" method="post" asp-route-id="@comment.Id">
@@ -86,3 +86,78 @@
         <hr/>
     }
 }
+
+<script src="~/lib/signalr/dist/browser/signalr.js"></script>
+<script type="text/javascript">
+    var connection = new signalR.HubConnectionBuilder().withUrl("/kek").build();
+
+    updateMessages = (id, userName, messageText, creationTime) => {
+        const container = $('#message-container-id');
+        var currUserName = document.getElementById("UserName").value;
+        var top = `<div style="margin:10px; padding:0px" id=${id}>
+            <div style="display:flex">
+                <div style="margin-right:auto; font-size:12px">
+                    <span>by <a href="#">${userName}</a></span>
+                    <span> ${creationTime}</span>
+                </div>`;
+        var bottom = `            </div>
+            <div style="margin-left:20px">
+                ${messageText}
+            </div>
+           <hr />
+        </div>`;
+        var buttons = `
+           <a class="btn btn-sm btn-primary" href="/Forum/EditMessage/${id}">Edit</a>
+            <button type="submit" class="btn btn-sm btn-danger" onclick="deleteMessage(${id})">
+                Delete
+            </button>
+            `;
+
+        var result = top;
+        if (currUserName == userName) {
+            result += buttons;
+        }
+        result += bottom;
+        container.append(result);
+
+        $('#messageInput').val('');
+        container.scrollTop(container[0].scrollHeight);
+
+    };
+
+    deleteMessage = (id) => {
+        connection.invoke("DeleteMessage", id).catch(function (err) {
+            return console.error(err.toString);
+        });
+    }
+
+    //Disable send button until connection is established
+    document.getElementById("sendButton").disabled = true;
+
+    connection.on("ReceiveMessage", function (id, user, message, date) {
+        updateMessages(id, user, message, date);
+    });
+
+    connection.on("DeleteMessageFrom", function (id) {
+        var element = document.getElementById(+id);
+        var parent = element.parentElement;
+        parent.removeChild(element);
+    });
+
+    connection.start().then(function () {
+        document.getElementById("sendButton").disabled = false;
+    }).catch(function (err) {
+        return console.error(err.toString());
+    });
+
+    document.getElementById("sendButton").addEventListener("click", function (event) {
+        var user = document.getElementById("UserName").value;
+        var message = document.getElementById("messageInput").value;
+        var id = document.getElementById("id").value;
+        connection.invoke("SendMessage", user, message, id).catch(function (err) {
+            return console.error(err.toString());
+        });
+        event.preventDefault();
+    });
+
+</script>

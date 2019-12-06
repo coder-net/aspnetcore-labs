@@ -87,76 +87,101 @@ namespace aspnet.Controllers
                 Name = topic.Name,
                 Description = topic.Description,
                 CreationTime = topic.CreationTime,
-                User = await _userManager.FindByIdAsync(topic.UserId),
+                User = user,
                 Messages = _context.TopicMessages.Where(x => x.TopicId == topic.Id).OrderBy(x => x.CreationTime).ToList(),
                 IsAdmin = isAdmin
             };
+            foreach (var message in model.Messages)
+            {
+                message.User = await _userManager.FindByIdAsync(message.UserId);
+            }
             return View(model);
         }
 
-
-        [HttpPost]
-        public async Task<IActionResult> Discuss(int id, string messageInput, string UserName)
+        public async Task<IActionResult> EditMessage(int id)
         {
-            var topic = _context.TopicModels.Include(x => x.Messages).FirstOrDefault(x=>x.Id == id);
-
-
-            
-
-            return View(topic);
-        }
-
-
-        public async Task<IActionResult> EditComment(int id)
-        {
-            var comment = await _context.PostComments.FindAsync(id);
-            if (comment == null)
+            var message = await _context.TopicMessages.FindAsync(id);
+            if (message == null)
             {
                 return NotFound();
             }
             var model = new EditCommentViewModel
             {
                 Id = id,
-                Text = comment.Text
+                Text = message.Text
             };
             return View("EditComment", model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditComment(EditPostViewModel model)
+        public async Task<IActionResult> EditMessage(EditPostViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var comment = await _context.PostComments.FindAsync(model.Id);
-                if (comment != null)
+                var message = await _context.TopicMessages.FindAsync(model.Id);
+                if (message != null)
                 {
-                    comment.Text = model.Text;
+                    message.Text = model.Text;
 
-                    var result = _context.PostComments.Update(comment);
+                    var result = _context.TopicMessages.Update(message);
 
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Details", new { id = comment.PostId });
+                    return RedirectToAction("Discuss", new { id = message.TopicId });
+                }
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> Edit(int id)
+        {
+            Topic topic = await _context.TopicModels.FindAsync(id);
+            if (topic == null)
+            {
+                return NotFound();
+            }
+            EditPostViewModel model = new EditPostViewModel
+            {
+                Id = id,
+                Title = topic.Name,
+                Text = topic.Description,
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditPostViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Topic topic = await _context.TopicModels.FindAsync(model.Id);
+                if (topic != null)
+                {
+                    topic.Name = model.Title;
+                    topic.Description = model.Text;
+
+                    var result = _context.TopicModels.Update(topic);
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Discuss", new { id = topic.Id });
+                }
+                else
+                {
+
                 }
             }
             return View(model);
         }
 
         [HttpPost]
-        public async Task<ActionResult> DeleteComment(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var comment = await _context.PostComments.FindAsync(id);
-            if (comment != null)
+            Topic topic = await _context.TopicModels.FindAsync(id);
+            if (topic != null)
             {
-                int postId = comment.PostId;
-                var result = _context.PostComments.Remove(comment);
+                var result = _context.TopicModels.Remove(topic);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = postId });
             }
-            else
-            {
-                return RedirectToAction("Index");
-            }
-
+            return RedirectToAction("Index");
         }
     }
 }
