@@ -8,6 +8,7 @@ namespace aspnet.Controllers
 {
     public class ActivityController : Controller
     {
+        [HttpGet("/Activity")]
         public IActionResult Index()
         {
             return View();

@@ -24,6 +24,8 @@ namespace aspnet.Controllers
             _context = context;
             _userManager = userManager;
         }
+
+        [HttpGet("/Posts")]
         public async Task<IActionResult> Index()
         {
             List<ShortPostViewModel> models = new List<ShortPostViewModel>();
@@ -39,10 +41,10 @@ namespace aspnet.Controllers
             }
             return View(models);
         }
-        [Authorize]
+        [Authorize, HttpGet("/Posts/Create")]
         public IActionResult Create() => View();
 
-        [HttpPost]
+        [HttpPost("/Posts/Create")]
         public async Task<IActionResult> Create(CreatePostViewModel model)
         {
             if (ModelState.IsValid)
@@ -73,49 +75,8 @@ namespace aspnet.Controllers
             }
             return View(model);
         }
-        [HttpPost]
-        public async Task<ActionResult> AddComment(PostDetailsViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                User user = await _userManager.FindByNameAsync(User.Identity.Name);
-                if (user is null)
-                {
-                    throw new InvalidOperationException("There is no current user.");
-                }
-                Post post = await _context.PostModels.FindAsync(model.Id);
-                if (String.IsNullOrWhiteSpace(model.NewComment))
-                {
-                    ModelState.AddModelError(String.Empty, "Comment must be provided.");
-                }
-                else
-                {
-                    var comment = new PostComment
-                    {
-                        User = user,
-                        CreationTime = DateTime.Now,
-                        Text = model.NewComment,
-                        PostId = model.Id
-                    };
-                    if (post.Comments is null)
-                    {
-                        post.Comments = new List<PostComment>()
-                        {
-                            comment
-                        };
-                    }
-                    else
-                    {
-                        post.Comments.Add(comment);
-                    }
-                    _context.PostComments.Add(comment);
-                    _context.PostModels.Update(post);
-                    await _context.SaveChangesAsync();
-                }
-            }
-            return RedirectToAction("Details", new { id = model.Id });
-        }
-
+        
+        [HttpGet("/Posts/Details/{id:int:min(1)}")]
         public async Task<IActionResult> Details(int id)
         {
             Post post = await _context.PostModels.FindAsync(id);
@@ -147,7 +108,7 @@ namespace aspnet.Controllers
             }
             return View(model);
         }
-
+        [HttpGet("/Posts/Edit/{id:int:min(1)}")]
         public async Task<IActionResult> Edit(int id)
         {
             Post post = await _context.PostModels.FindAsync(id);
@@ -164,12 +125,12 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(EditPostViewModel model)
+        [HttpPost("/Posts/Edit/{id:int:min(1)}")]
+        public async Task<IActionResult> Edit(int id, EditPostViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Post post = await _context.PostModels.FindAsync(model.Id);
+                Post post = await _context.PostModels.FindAsync(id);
                 if (post != null)
                 {
                     post.Title = model.Title;
@@ -188,7 +149,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost("/Posts/Delete/{id:int:min(1)}")]
         public async Task<ActionResult> Delete(int id)
         {
             Post post = await _context.PostModels.FindAsync(id);
@@ -200,9 +161,7 @@ namespace aspnet.Controllers
             return RedirectToAction("Index");
         }
 
-
-       
-
+        [HttpGet("/Posts/EditComment/{id:int:min(1)}")]
         public async Task<IActionResult> EditComment(int id)
         {
             var comment = await _context.PostComments.FindAsync(id);
@@ -218,12 +177,12 @@ namespace aspnet.Controllers
             return View("EditComment", model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditComment(EditPostViewModel model)
+        [HttpPost("/Posts/EditComment/{id:int:min(1)}")]
+        public async Task<IActionResult> EditComment(int id, EditPostViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var comment = await _context.PostComments.FindAsync(model.Id);
+                var comment = await _context.PostComments.FindAsync(id);
                 if (comment != null)
                 {
                     comment.Text = model.Text;
@@ -237,23 +196,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> DeleteComment(int id)
-        {
-            var comment = await _context.PostComments.FindAsync(id);
-            if (comment != null)
-            {
-                int postId = comment.PostId;
-                var result = _context.PostComments.Remove(comment);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { id = postId });
-            }
-            else
-            {
-                return RedirectToAction("Index");
-            }
-            
-        }
+        [Route("/Posts/GetPosts/")]
 
         public object GetPosts(int page, int perPage)
         {

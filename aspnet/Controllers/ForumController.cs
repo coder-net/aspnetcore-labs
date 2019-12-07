@@ -24,16 +24,16 @@ namespace aspnet.Controllers
             _userManager = userManager;
         }
 
-        
+        [HttpGet("/Forum")]
         public IActionResult Index()
         {
             return View(_context.TopicModels.ToList());
         }
 
-        [Authorize]
+        [Authorize, HttpGet("/Forum/CreateTopic")]
         public IActionResult Create() => View();
 
-        [HttpPost]
+        [HttpPost("/Forum/CreateTopic")]
         [Authorize]
         public async Task<IActionResult> Create(CreateTopicViewModel model)
         {
@@ -67,6 +67,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
+        [HttpGet("/Forum/Discuss/{id:int}")]
         public async Task<IActionResult> Discuss(int id)
         {
             //var topic = _context.TopicModels.Include(x => x.Messages).FirstOrDefault(x => x.Id == id);//.FindAsync(id);
@@ -99,6 +100,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
+        [HttpGet("/Forum/EditMessage/{id:int}")]
         public async Task<IActionResult> EditMessage(int id)
         {
             var message = await _context.TopicMessages.FindAsync(id);
@@ -114,8 +116,8 @@ namespace aspnet.Controllers
             return View("EditComment", model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditMessage(EditPostViewModel model)
+        [HttpPost("/Forum/EditMessage/{id:int}")]
+        public async Task<IActionResult> EditMessage(int id, EditPostViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -133,6 +135,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
+        [HttpGet("/Forum/Edit/{id:int}")]
         public async Task<IActionResult> Edit(int id)
         {
             Topic topic = await _context.TopicModels.FindAsync(id);
@@ -149,8 +152,8 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(EditPostViewModel model)
+        [HttpPost("/Forum/Edit/{id:int}")]
+        public async Task<IActionResult> Edit(int id, EditPostViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -173,7 +176,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost("/Forum/Delete/{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
             Topic topic = await _context.TopicModels.FindAsync(id);

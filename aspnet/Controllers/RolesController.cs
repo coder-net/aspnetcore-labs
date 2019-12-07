@@ -20,11 +20,13 @@ namespace aspnet.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles="admin")]
+        [Authorize(Roles="admin"), HttpGet("/Roles")]
         public IActionResult Index() => View(_roleManager.Roles.ToList());
 
+        [Authorize(Roles="admin"), HttpGet("/Roles/Create")]
         public IActionResult Create() => View();
-        [HttpPost]
+
+        [Authorize(Roles = "admin"), HttpPost("/Roles/Create")]
         public async Task<IActionResult> Create(string name)
         {
             if (!string.IsNullOrEmpty(name))
@@ -45,7 +47,7 @@ namespace aspnet.Controllers
             return View(name);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "admin"), HttpPost("/Roles/Delete/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             IdentityRole role = await _roleManager.FindByIdAsync(id);
@@ -55,9 +57,11 @@ namespace aspnet.Controllers
             }
             return RedirectToAction("Index");
         }
-
+        
+        [Authorize(Roles = "admin"), HttpGet("/Roles/UserRoles")]
         public IActionResult UserList() => View(_userManager.Users.ToList());
 
+        [Authorize(Roles = "admin"), HttpGet("/Roles/Edit/{userId}")]
         public async Task<IActionResult> Edit(string userId)
         {
             // получаем пользователя
@@ -79,7 +83,7 @@ namespace aspnet.Controllers
 
             return NotFound();
         }
-        [HttpPost]
+        [Authorize(Roles = "admin"), HttpPost("/Roles/Edit/{userId}")]
         public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
             // получаем пользователя

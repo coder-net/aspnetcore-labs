@@ -23,10 +23,10 @@
 <hr/>
 
 <div class="pagination" id="pagination" style="padding:0px; margin:0px">
-    <button id="prev-page-btn" class="btn btn-default" onClick="changePage(-1)" style="visibility:hidden">
+    <button id="prev-page-btn" class="btn btn-default" onClick="changePage(-1)" disabled>
         prev
     </button>
-    <button id="next-page-btn" class="btn btn-default" onClick="changePage(1)" style="visibility:hidden">
+    <button id="next-page-btn" class="btn btn-default" onClick="changePage(1)" disabled>
         next
     </button>
 </div>
@@ -36,17 +36,17 @@
     const pagination = {
         currentPage: 1,
         lastPage: 1,
-        perPage: 1
+        perPage: 3
     };
     let content = [];
     checkDisable = () => {
-        $("#prev-page-btn").css("visibility", "visible");
-        $("#next-page-btn").css("visibility", "visible");
+        $("#prev-page-btn").attr("disabled", false);
+        $("#next-page-btn").attr("disabled", false);
         if (pagination.currentPage == 1) {
-            $("#prev-page-btn").css("visibility", "hidden");
+            $("#prev-page-btn").attr("disabled", true);
         }
         if (pagination.currentPage == pagination.lastPage) {
-            $("#next-page-btn").css("visibility", "hidden");
+            $("#next-page-btn").attr("disabled", true);
         }
     };
     changePage = (x) => {

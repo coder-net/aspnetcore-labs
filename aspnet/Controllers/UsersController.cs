@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace aspnet.Controllers
 {
-    [Authorize(Roles = "admin")]
     public class UsersController : Controller
     {
         UserManager<User> _userManager;
@@ -18,11 +17,13 @@ namespace aspnet.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles= "admin"), HttpGet("/Users")]
         public IActionResult Index() => View(_userManager.Users.ToList());
 
+        [Authorize(Roles = "admin"), HttpGet("/Users/Create")]
         public IActionResult Create() => View();
 
-        [HttpPost]
+        [Authorize(Roles= "admin"), HttpPost("/Users/Create")]
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -44,6 +45,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
+        [Authorize(Roles= "admin"), HttpGet("/Users/Edit/{id}")]
         public async Task<IActionResult> Edit(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -55,7 +57,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "admin"), HttpPost("/Users/Edit")]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -83,7 +85,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [Authorize(Roles = "admin"), HttpPost("/Users/Delete/{id}")]
         public async Task<ActionResult> Delete(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -94,6 +96,7 @@ namespace aspnet.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin"), HttpPost("/Users/ChangePassword/{id}")]
         public async Task<IActionResult> ChangePassword(string id)
         {
             User user = await _userManager.FindByIdAsync(id);
@@ -105,7 +108,7 @@ namespace aspnet.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [Authorize(Roles= "admin"), HttpPost("/Users/ChangePassword")]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
