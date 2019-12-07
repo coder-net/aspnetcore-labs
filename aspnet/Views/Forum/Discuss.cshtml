@@ -33,7 +33,7 @@
                         <span> @message.CreationTime.ToString()</span>
                     </div>
 
-                    @if (Model.IsAdmin || Model.User.UserName == message.User.UserName)
+                    @if (User.Identity.IsAuthenticated && (Model.IsAdmin || Model.User.UserName == message.User.UserName))
                     {
                         <div>
                             <a class="btn btn-sm btn-default" asp-action="EditMessage" asp-route-id="@message.Id">Edit</a>
@@ -96,10 +96,12 @@
            <hr />
         </div>`;
         var buttons = `
+        <div>
            <a class="btn btn-sm btn-default" href="/Forum/EditMessage/${id}">Edit</a>
             <button type="submit" class="btn btn-sm" onclick="deleteMessage(${id})">
                 Delete
             </button>
+                        </div>
             `;
 
         var result = top;

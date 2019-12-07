@@ -1,5 +1,4 @@
-﻿@model IEnumerable<aspnet.ViewModel.ShortPostViewModel>
-
+﻿
 @{
     ViewData["Title"] = "Posts";
 }
@@ -19,34 +18,65 @@
     </div>
 </div>
 
-@foreach (var post in Model)
-{
-    @**
-    <hr />
-    <div>
-        <div style="text-align:end">
-            <h5>
-                <b>Created by: </b>@post.User.UserName
-            </h5>
-        </div>
-        <div style="text-align:center">
-            <h2>
-                @post.Title
-            </h2>
-        </div>
-        <div style="display:flex">
-            <h4 style="margin-right:auto">
-                <b>Created on: </b>@post.Time.ToShortDateString()
-            </h4>
-            <div style="margin-left:auto">
-                <form asp-action="Delete" asp-route-id="@post.PostId" method="post">
-                    <a class="btn btn-sm btn-primary" asp-action="Details" asp-route-id="@post.PostId">Details</a>
-                </form>
-            </div>
-        </div>
+<hr/>
 
-    </div>
-    **@
+
+<div id="container">
+</div>
+
+<div class="pagination" id="pagination" style="padding:0px; margin:0px">
+    <button id="prev-page-btn" class="btn btn-default" onClick="changePage(-1)" style="visibility:hidden">
+        prev
+    </button>
+    <button id="next-page-btn" class="btn btn-default" onClick="changePage(1)" style="visibility:hidden">
+        next
+    </button>
+</div>
+
+
+<script type="text/javascript">
+    const pagination = {
+        currentPage: 1,
+        lastPage: 1,
+        perPage: 1
+    };
+    let content = [];
+    checkDisable = () => {
+        $("#prev-page-btn").css("visibility", "visible");
+        $("#next-page-btn").css("visibility", "visible");
+        if (pagination.currentPage == 1) {
+            $("#prev-page-btn").css("visibility", "hidden");
+        }
+        if (pagination.currentPage == pagination.lastPage) {
+            $("#next-page-btn").css("visibility", "hidden");
+        }
+    };
+    changePage = (x) => {
+        const newPage = pagination.currentPage + x;
+        if (newPage > 0 && newPage <= pagination.lastPage) {
+            pagination.currentPage = newPage;
+        }
+        updateContent();
+    };
+    updateContent = () =>
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("GetPosts", "Posts")',
+            type: 'GET',
+            data: { page: pagination.currentPage, perPage: pagination.perPage },
+            success: result => {
+                pagination.lastPage = result.lastPage;
+                content = result.data;
+                updateFlex();
+                checkDisable();
+            }
+        })
+    updateFlex = () => {
+        const container = $("#container");
+        container.empty();
+        content.forEach(e =>
+            container.append(
+                    `
     <div class="container">
 
         <!-- Page Heading -->
@@ -54,16 +84,21 @@
         <div class="row">
             
             <div class="col-md-3">
-                <h3>@post.Title</h3>
-                <p><b>User: </b>@post.User.UserName</p>
-                <p><b>Data: </b>@post.Time.ToShortDateString()</p>
-                <a class="btn btn-lg' btn-info" asp-action="Details" asp-route-id="@post.PostId">More</a>
+                <h3>${e.title}</h3 >
+                <p><b>User: </b>${e.userName}</p>
+                <p><b>Data: </b>${e.date}</p >
+                <a class="btn btn-info" href="/Posts/Details/${e.id}">More</a>
             </div>
         </div>
         <!-- /.row -->
 
         <hr>
-    </div>
-}
-
+    </div>`
+            ));
+    };
+    $().ready(function () {
+        updateContent();
+        updateFlex();
+    });
+</script>
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using aspnet.Data;
 using aspnet.Models;
 using aspnet.ViewModel;
+using Markdig;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -182,6 +183,23 @@ namespace aspnet.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");
+        }
+
+        public object GetTopics(int page, int perPage)
+        {
+            var albums = _context.TopicModels.Include(x => x.User).OrderByDescending(x => x.CreationTime);
+
+            var count = albums.Count();
+            var lastPage = Math.Ceiling((double)count / perPage);
+            var data = new List<Object>();
+            foreach (var post in albums.Skip((page - 1) * perPage).Take(perPage))
+            {
+                var name = Markdown.ToHtml(post.Name);
+                var description = Markdown.ToHtml(post.Description);
+                var id = post.Id;
+                data.Add(new { name, description, id });
+            }
+            return new { data, lastPage };
         }
     }
 }

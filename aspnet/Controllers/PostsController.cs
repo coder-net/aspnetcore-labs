@@ -9,6 +9,7 @@ using Markdig;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace aspnet.Controllers
 {
@@ -252,6 +253,24 @@ namespace aspnet.Controllers
                 return RedirectToAction("Index");
             }
             
+        }
+
+        public object GetPosts(int page, int perPage)
+        {
+            var albums = _context.PostModels.Include(x => x.User).OrderByDescending(x => x.Time);
+
+            var count = albums.Count();
+            var lastPage = Math.Ceiling((double)count / perPage);
+            var data = new List<Object>();
+            foreach (var post in albums.Skip((page - 1) * perPage).Take(perPage))
+            {
+                var date = post.Time.ToShortDateString();
+                var userName = post.User.UserName;
+                var title = Markdown.ToHtml(post.Title);
+                var id = post.PostId;
+                data.Add(new { title, date, userName, id});
+            }
+            return new { data, lastPage };
         }
     }
 }

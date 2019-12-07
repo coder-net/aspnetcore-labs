@@ -17,18 +17,80 @@
     </div>
 </div>
 
-@foreach (var topic in Model)
-{
+<div id="container">
+</div>
+
+<hr/>
+
+<div class="pagination" id="pagination" style="padding:0px; margin:0px">
+    <button id="prev-page-btn" class="btn btn-default" onClick="changePage(-1)" style="visibility:hidden">
+        prev
+    </button>
+    <button id="next-page-btn" class="btn btn-default" onClick="changePage(1)" style="visibility:hidden">
+        next
+    </button>
+</div>
+
+
+<script type="text/javascript">
+    const pagination = {
+        currentPage: 1,
+        lastPage: 1,
+        perPage: 1
+    };
+    let content = [];
+    checkDisable = () => {
+        $("#prev-page-btn").css("visibility", "visible");
+        $("#next-page-btn").css("visibility", "visible");
+        if (pagination.currentPage == 1) {
+            $("#prev-page-btn").css("visibility", "hidden");
+        }
+        if (pagination.currentPage == pagination.lastPage) {
+            $("#next-page-btn").css("visibility", "hidden");
+        }
+    };
+    changePage = (x) => {
+        const newPage = pagination.currentPage + x;
+        if (newPage > 0 && newPage <= pagination.lastPage) {
+            pagination.currentPage = newPage;
+        }
+        updateContent();
+    };
+    updateContent = () =>
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("GetTopics", "Forum")',
+            type: 'GET',
+            data: { page: pagination.currentPage, perPage: pagination.perPage },
+            success: result => {
+                pagination.lastPage = result.lastPage;
+                content = result.data;
+                updateFlex();
+                checkDisable();
+            }
+        })
+    updateFlex = () => {
+        const container = $("#container");
+        container.empty();
+        content.forEach(e =>
+            container.append(
+                    `
     <hr />
     <div class="row">
         <div class="col-md-6">
-            @*<h3>@topic.Name</h3>*@
-            <h3><markdown content="@topic.Name"/></h3>
+            <h3>${e.name}</h3>
         </div>
     </div>
-    @*<h5>@topic.Description</h5>*@
-    <h5><markdown content="@topic.Description"/></h5>
+    <h5>${e.description}</h5>
 
 
-    <a class="btn btn-info" asp-action="Discuss" asp-route-id="@topic.Id">Discuss</a>
-}
+    <a class="btn btn-info" href="/Forum/Discuss/${e.id}">Discuss</a>
+`
+            ));
+    };
+    $().ready(function () {
+        updateContent();
+        updateFlex();
+    });
+</script>
+
