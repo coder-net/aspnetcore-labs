@@ -1,11 +1,14 @@
-﻿
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
 @{
-    ViewData["Title"] = "Activity";
+    ViewData["Title"] = Localizer["activity"];
 }
 
-<h1><b>10 last messages</b></h1>
+<h1><b>@Localizer["message"]</b></h1>
 
-<hr/>
+<hr />
 
 @await Component.InvokeAsync("RecentMessages")
 

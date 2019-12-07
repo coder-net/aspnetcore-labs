@@ -1,19 +1,20 @@
-﻿
+﻿@using  Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @{
-    ViewData["Title"] = "Posts";
+    ViewData["Title"] = Localizer["posts"];
 }
 
 
 <div class="row">
     <div class="col-md-2">
         <h1 class="my-4">
-            Posts
+            @Localizer.GetString("posts")
         </h1>
     </div>
     <div class="col-md-5">
         @if (User.Identity.IsAuthenticated)
         {
-            <a class="btn btn-default" style="margin-top:25px" asp-action="Create">Add post</a>
+            <a class="btn btn-default" style="margin-top:25px" asp-action="Create">@Localizer["create"]</a>
         }
     </div>
 </div>
@@ -26,10 +27,10 @@
 
 <div class="pagination" id="pagination" style="padding:0px; margin:0px">
     <button id="prev-page-btn" class="btn btn-default" onClick="changePage(-1)" disabled>
-        prev
+        @Localizer["prev"]
     </button>
     <button id="next-page-btn" class="btn btn-default" onClick="changePage(1)" disabled>
-        next
+        @Localizer["next"]
     </button>
 </div>
 
@@ -85,9 +86,9 @@
             
             <div class="col-md-3">
                 <h3>${e.title}</h3 >
-                <p><b>User: </b>${e.userName}</p>
-                <p><b>Data: </b>${e.date}</p >
-                <a class="btn btn-info" href="/Posts/Details/${e.id}">More</a>
+                <p><b>@Localizer["user"]: </b>${e.userName}</p>
+                <p><b>@Localizer["date"]: </b>${e.date}</p >
+                <a class="btn btn-info" href="/Posts/Details/${e.id}">@Localizer["more"]</a>
             </div>
         </div>
         <!-- /.row -->

@@ -1,23 +1,25 @@
-﻿@model aspnet.ViewModel.EditPostViewModel
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@model aspnet.ViewModel.EditPostViewModel
 @{
-    ViewBag.Title = "Edit post";
+    ViewBag.Title = Localizer["edit"];
 }
 
-<h2>Edit post</h2>
+<h2>@Localizer["edit"]</h2>
 
 <form asp-action="Edit" asp-controller="Posts" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Title" class="control-label">Title</label>
-        <textarea
-                  class="form-control" id="descriptiontext" rows="2" asp-for="Title"></textarea>
+        <label asp-for="Title" class="control-label">@Localizer["title"]</label>
+        <textarea class="form-control" id="descriptiontext" rows="2" asp-for="Title"></textarea>
     </div>
     <div class="form-group">
-        <label asp-for="Text" class="control-label">Content</label>
-        <textarea
-                  class="form-control" id="descriptiontext" rows="6" asp-for="Text"></textarea>
+        <label asp-for="Text" class="control-label">@Localizer["content"]</label>
+        <textarea class="form-control" id="descriptiontext" rows="6" asp-for="Text"></textarea>
     </div>
     <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-default" />
+        <input type="submit" value="@Localizer["ready"]" class="btn btn-default" />
     </div>
 </form>

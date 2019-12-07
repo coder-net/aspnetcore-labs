@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Name" xml:space="preserve">
-    <value>Cooperative "PINE EIGHT"</value>
+  <data name="permissions" xml:space="preserve">
+    <value>Права доступа</value>
   </data>
-  <data name="Welcome" xml:space="preserve">
-    <value>Welcome</value>
+  <data name="users" xml:space="preserve">
+    <value>Список пользователей</value>
   </data>
 </root>

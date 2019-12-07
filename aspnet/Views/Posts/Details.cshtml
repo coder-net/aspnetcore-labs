@@ -1,15 +1,19 @@
-﻿@model aspnet.ViewModel.PostDetailsViewModel
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@model aspnet.ViewModel.PostDetailsViewModel
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Localizer["details"];
 }
 
 @if (Model.IsAdmin)
 {
 
     <form asp-action="Delete" asp-controller="Posts" method="post" asp-route-id="@Model.Id">
-        <a style="margin:10px" class="btn btn-sm btn-default" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a style="margin:10px" class="btn btn-sm btn-default" asp-action="Edit" asp-route-id="@Model.Id">@Localizer["edit"]</a>
         <button type="submit" class="btn btn-sm">
-            Delete
+            @Localizer["delete"]
         </button>
     </form>
 }
@@ -19,8 +23,8 @@
         <div class="row">
             <div class="col-lg-10 col-xl-8 offset-lg-1 offset-xl-2">
                 <div class="intro">
-                    <h1 class="text-center"><markdown content="@Model.Title"/></h1>
-                    <p class="text-center" style="font-size:20px"><span class="by">by</span> <a href="#">@Model.User.UserName</a> | <span class="date"> @Model.Time.ToString()</span></p>
+                    <h1 class="text-center"><markdown content="@Model.Title" /></h1>
+                    <p class="text-center" style="font-size:20px"><span class="by">@Localizer["author"]:</span> <a href="#">@Model.User.UserName</a> | <span class="date"> @Model.Time.ToString()</span></p>
                 </div>
                 <div class="center-block" style="margin: 0 auto; background: gray; padding: 10px; border: 2px gray; border-radius: 10px;">
                     <markdown content="@Model.Text" />
@@ -35,56 +39,56 @@
 <hr />
 
 <h2>
-    Comments
+    @Localizer["comments"]
 </h2>
 @if (User.Identity.IsAuthenticated)
 {
     <input hidden name="UserName" id="UserName" type="text" value="@User.Identity.Name">
     <input hidden value="@Model.Id" name="id" id="id">
     <hr />
-    <textarea style="margin:10px" placeholder="Your comment..."
-          class="form-control" id="commentInput" name="commentInput" rows="3" ></textarea>
+    <textarea style="margin:10px" placeholder="@Localizer["comment_content"]"
+              class="form-control" id="commentInput" name="commentInput" rows="3"></textarea>
 
     <div class="form-group">
-        <input type="submit" value="Submit" class="btn btn-success"  id="sendButton" name="sendButton"/>
+        <input type="submit" value="@Localizer["add"]" class="btn btn-success" id="sendButton" name="sendButton" />
     </div>
 }
 
 <hr />
 
 <div id="comments-container-id">
-@if (Model.Comments != null)
-{
-    @foreach (var comment in Model.Comments)
+    @if (Model.Comments != null)
     {
-    <div style="margin:10px; padding:0px" id="@comment.Id">
-        <div style="display:flex">
-            <div style="margin-right:auto; font-size:12px">
-                <span>by <a href="#">@comment.User.UserName</a></span>
-                <span> @comment.CreationTime.ToString()</span>
+        @foreach (var comment in Model.Comments)
+        {
+            <div style="margin:10px; padding:0px" id="@comment.Id">
+                <div style="display:flex">
+                    <div style="margin-right:auto; font-size:12px">
+                        <span>@Localizer["author"]: <a href="#">@comment.User.UserName</a></span>
+                        <span> @comment.CreationTime.ToString()</span>
+                    </div>
+
+                    @if (User.Identity.IsAuthenticated && (Model.IsAdmin || Model.CurrentUser == comment.User))
+                    {
+                        <div>
+                            <a class="btn btn-sm btn-default" asp-action="EditComment" asp-route-id="@comment.Id">@Localizer["edit_comment"]</a>
+                            <button type="submit" class="btn btn-sm" onclick="deleteComment(@comment.Id)">
+                                @Localizer["delete_comment"]
+                            </button>
+                        </div>
+                    }
+
+                </div>
+
+
+                <div style="margin-left:20px">
+                    <markdown content="@comment.Text" />
+                </div>
+                <hr />
             </div>
 
-            @if (User.Identity.IsAuthenticated && (Model.IsAdmin || Model.CurrentUser == comment.User))
-            {
-                <div>
-                    <a class="btn btn-sm btn-default" asp-action="EditComment" asp-route-id="@comment.Id">Edit</a>
-                    <button type="submit" class="btn btn-sm" onclick="deleteComment(@comment.Id)">
-                        Delete
-                    </button>
-                </div>
-            }
-
-        </div>
-
-
-        <div style="margin-left:20px">
-            <markdown content="@comment.Text" />
-        </div>
-        <hr />
-    </div>
-
+        }
     }
-}
 </div>
 
 <script src="~/lib/signalr/dist/browser/signalr.js"></script>
@@ -97,7 +101,7 @@
         var top = `<div style="margin:10px; padding:0px" id=${id}>
             <div style="display:flex">
                 <div style="margin-right:auto; font-size:12px">
-                    <span>by <a href="#">${userName}</a></span>
+                    <span>@Localizer["author"] <a href="#">${userName}</a></span>
                     <span> ${creationTime}</span>
                 </div>`;
         var bottom = `            </div>
@@ -108,9 +112,9 @@
         </div>`;
         var buttons = `
         <div>
-           <a class="btn btn-sm btn-default" href="/Posts/EditComment/${id}">Edit</a>
+           <a class="btn btn-sm btn-default" href="/Posts/EditComment/${id}">@Localizer["edit_comment"]</a>
             <button type="submit" class="btn btn-sm" onclick="deleteComment(${id})">
-                Delete
+                @Localizer["delete_comment"]
             </button>
         </div>
             `;

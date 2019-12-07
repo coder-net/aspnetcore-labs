@@ -1,6 +1,10 @@
-﻿@model aspnet.ViewModel.EditUserViewModel
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@model aspnet.ViewModel.EditUserViewModel
 @{
-    ViewBag.Title = "Редактирование пользователя";
+    ViewBag.Title = Localizer["editing"];
 }
 <form asp-action="Edit" asp-controller="Users">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -8,11 +12,11 @@
         <input type="hidden" asp-for="Id" />
     </div>
     <div class="form-group">
-        <label asp-for="Email" class="control-label">Email</label>
+        <label asp-for="Email" class="control-label">@Localizer["email"]</label>
         <input type="text" asp-for="Email" class="form-control" />
     </div>
     </div>
     <div class="form-group">
-        <input type="submit" value="Сохранить" class="btn btn-default" />
+        <input type="submit" value="@Localizer["save"]" class="btn btn-default" />
     </div>
 </form>

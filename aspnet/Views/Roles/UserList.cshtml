@@ -1,13 +1,17 @@
-﻿@model IEnumerable<aspnet.Models.User>
+﻿@using Microsoft.Extensions.Options
 
-<h2>Список пользователей</h2>
+@inject IViewLocalizer Localizer
+
+@model IEnumerable<aspnet.Models.User>
+
+<h2>@Localizer["users"]</h2>
 <table class="table">
     @foreach (var user in Model)
     {
         <tr>
             <td>@user.Email</td>
             <td>
-                <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-userid="@user.Id">Права доступа</a>
+                <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-userid="@user.Id">@Localizer["permissions"]</a>
             </td>
         </tr>
     }

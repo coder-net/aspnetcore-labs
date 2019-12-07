@@ -1,18 +1,22 @@
-﻿@model aspnet.ViewModel.CreateUserViewModel
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@model aspnet.ViewModel.CreateUserViewModel
 @{
-    ViewBag.Title = "Добавление пользователя";
+    ViewBag.Title = Localizer["adding"];
 }
 <form asp-action="Create" asp-controller="Users">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Email" class="control-label">Email</label>
+        <label asp-for="Email" class="control-label">@Localizer["email"]</label>
         <input type="text" asp-for="Email" class="form-control" />
     </div>
     <div class="form-group">
-        <label asp-for="Password" class="control-label">Пароль</label>
+        <label asp-for="Password" class="control-label">@Localizer["password"]</label>
         <input type="text" asp-for="Password" class="form-control" />
     </div>
     <div class="form-group">
-        <input type="submit" value="Добавить" class="btn btn-default" />
+        <input type="submit" value="@Localizer["add"]" class="btn btn-default" />
     </div>
 </form>

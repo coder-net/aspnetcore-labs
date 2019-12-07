@@ -1,22 +1,26 @@
-﻿@model IEnumerable<aspnet.Models.User>
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@model IEnumerable<aspnet.Models.User>
 @{
-    ViewBag.Title = "Список пользователей";
+    ViewBag.Title = Localizer["users"];
 }
 
-<a asp-action="Create">Добавить пользователя</a>
+<a asp-action="Create">@Localizer["add"]</a>
 
 <table class="table">
-    <tr><th>Email</th><th></th></tr>
+    <tr><th>@Localizer["email"]</th><th></th></tr>
     @foreach (var user in Model)
     {
         <tr>
             <td>@user.Email</td>
             <td>
                 <form asp-action="Delete" asp-route-id="@user.Id" method="post">
-                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@user.Id">Изменить</a>
-                    <a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id="@user.Id">Сменить пароль</a>
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@user.Id">@Localizer["change"]</a>
+                    <a class="btn btn-sm btn-primary" asp-action="ChangePassword" asp-route-id="@user.Id">@Localizer["change_password"]</a>
                     <button type="submit" class="btn btn-sm btn-danger">
-                        Удалить
+                        @Localizer["delete"]
                     </button>
                 </form>
             </td>

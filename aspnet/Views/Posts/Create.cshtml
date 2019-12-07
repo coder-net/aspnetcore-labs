@@ -1,20 +1,23 @@
-﻿@model aspnet.ViewModel.CreatePostViewModel
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+@model aspnet.ViewModel.CreatePostViewModel
 @{
-    ViewBag.Title = "Create new post";
+    ViewBag.Title = Localizer["create"];
 }
 <form asp-action="Create" asp-controller="Posts">
     <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group">
-        <label asp-for="Title" class="control-label">Title</label>
-        <textarea placeholder="Title"
+        <label asp-for="Title" class="control-label">@Localizer["title"]</label>
+        <textarea placeholder="@Localizer["title"]"
                   class="form-control" id="descriptiontext" rows="2" asp-for="Title"></textarea>
     </div>
     <div class="form-group">
-        <label asp-for="Text" class="control-label">Content</label>
-        <textarea placeholder="Description."
+        <label asp-for="Text" class="control-label">@Localizer["content"]</label>
+        <textarea placeholder="@Localizer["content"]"
                   class="form-control" id="descriptiontext" rows="6" asp-for="Text"></textarea>
     </div>
     <div class="form-group">
-        <input type="submit" value="Добавить" class="btn btn-default" />
+        <input type="submit" value="@Localizer["add"]" class="btn btn-default" />
     </div>
 </form>

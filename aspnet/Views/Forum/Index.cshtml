@@ -1,18 +1,22 @@
-﻿@model IEnumerable<aspnet.Models.Topic>
+﻿@using Microsoft.Extensions.Options
+
+@inject IViewLocalizer Localizer
+
+@model IEnumerable<aspnet.Models.Topic>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = @Localizer["forum"];
 }
 
 <div class="row">
     <div class="col-md-2">
         <h1 class="my-4">
-            Forum
+            @Localizer["forum"]
         </h1>
     </div>
     <div class="col-md-5">
         @if (User.Identity.IsAuthenticated)
         {
-            <a class="btn btn-default" style="margin-top:25px" asp-action="Create">Add topic</a>
+            <a class="btn btn-default" style="margin-top:25px" asp-action="Create">@Localizer["add"]</a>
         }
     </div>
 </div>
@@ -20,14 +24,14 @@
 <div id="container">
 </div>
 
-<hr/>
+<hr />
 
 <div class="pagination" id="pagination" style="padding:0px; margin:0px">
     <button id="prev-page-btn" class="btn btn-default" onClick="changePage(-1)" disabled>
-        prev
+        @Localizer["prev"]
     </button>
     <button id="next-page-btn" class="btn btn-default" onClick="changePage(1)" disabled>
-        next
+        @Localizer["next"]
     </button>
 </div>
 
@@ -84,7 +88,7 @@
     <h5>${e.description}</h5>
 
 
-    <a class="btn btn-info" href="/Forum/Discuss/${e.id}">Discuss</a>
+    <a class="btn btn-info" href="/Forum/Discuss/${e.id}">@Localizer["discuss"]</a>
 `
             ));
     };

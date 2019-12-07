@@ -37,6 +37,7 @@ namespace aspnet
             services.AddMvc()
                 .AddDataAnnotationsLocalization()
                 .AddViewLocalization();
+
             services.Configure<RequestLocalizationOptions>(options =>
             {
                 var supportedCultures = new[]
@@ -66,11 +67,7 @@ namespace aspnet
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddRouting(options =>
-            {
-                options.ConstraintMap.Add("editComment", typeof(EditCommentViewModel));
-            });
-
+  
             services.AddTransient<Data.IDBInitializer, Data.DbInitializer>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
